@@ -17,6 +17,42 @@ namespace GradeBook.GradeBooks
             this.Type = GradeBookType.Ranked;
         }
 
+        public override char GetLetterGrade(double averageGrade)
+        {
+            int student = 0;
+            if (base.Students.Count < 5)
+            {
+                throw new InvalidOperationException();
+            }
+            else if (base.Students.Count >= 5)
+            {
+                for (int i = 0; i < Students.Count; i++)
+                {
+                    if (Students[i].AverageGrade == averageGrade)
+                    {
+                        student++;
+                    }
+                }
+                if (student == Students.Count /5)
+                {
+                    return 'A';
+                }
+                else if (student > Students.Count / 5 || student < Students.Count * 0.4)
+                {
+                    return 'B';
+                }
+                else if (student > Students.Count * 0.4 || student < Students.Count * 0.6)
+                {
+                    return 'C';
+                }
+                else if (student > Students.Count * 0.6 || student < Students.Count * 0.8)
+                {
+                    return 'D';
+                }
+            }
+            return 'F';
+        }
+
         public override void CalculateStatistics()
         {
             if (base.Students.Count < 5)
