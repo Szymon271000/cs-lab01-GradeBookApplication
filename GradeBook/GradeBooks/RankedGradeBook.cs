@@ -1,11 +1,12 @@
 ﻿using GradeBook.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace GradeBook.GradeBooks
 {
-    class RankedGradeBook: BaseGradeBook
+    public class RankedGradeBook: BaseGradeBook
     {
         public string name;
 
@@ -19,38 +20,35 @@ namespace GradeBook.GradeBooks
 
         public override char GetLetterGrade(double averageGrade)
         {
-            int student = 0;
-            if (base.Students.Count < 5)
+            if (Students.Count < 5)
             {
                 throw new InvalidOperationException();
             }
-            else if (base.Students.Count >= 5)
+
+            double min = Students.Min(x => x.AverageGrade);
+            double max = Students.Max(x => x.AverageGrade);
+            double diff = max - min;
+            double step = diff / 5;
+            if(averageGrade >= 4 * step)
             {
-                for (int i = 0; i < Students.Count; i++)
-                {
-                    if (Students[i].AverageGrade == averageGrade)
-                    {
-                        student++;
-                    }
-                }
-                if (student == Students.Count /5)
-                {
-                    return 'A';
-                }
-                else if (student > Students.Count / 5 || student < Students.Count * 0.4)
-                {
-                    return 'B';
-                }
-                else if (student > Students.Count * 0.4 || student < Students.Count * 0.6)
-                {
-                    return 'C';
-                }
-                else if (student > Students.Count * 0.6 || student < Students.Count * 0.8)
-                {
-                    return 'D';
-                }
+                return 'A';
             }
-            return 'F';
+            else if (averageGrade >= 3 * step)
+            {
+                return 'B';
+            }
+            else if (averageGrade >= 2 * step)
+            {
+                return 'C';
+            }
+            else if (averageGrade >= 1 * step)
+            {
+                return 'D';
+            }
+            else
+            {
+                return 'F';
+            }
         }
 
         public override void CalculateStatistics()
